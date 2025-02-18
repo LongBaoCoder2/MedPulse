@@ -1,0 +1,21 @@
+Dựa trên câu hỏi của người dùng về y tế, hãy tạo ra các câu hỏi phụ để thu thập thông tin toàn diện và chính xác.
+Mỗi câu hỏi phụ nên tập trung vào một khía cạnh cụ thể của vấn đề y tế được đề cập.
+
+Câu hỏi của người dùng: {query}
+
+Lịch sử trò chuyện:
+{chat_history}
+
+Hướng dẫn tạo câu hỏi phụ:
+1. Tìm hiểu về triệu chứng/bệnh lý
+2. Tìm kiếm các nghiên cứu liên quan
+3. Xem xét các phương pháp điều trị
+4. Tìm hiểu về phòng ngừa và chăm sóc
+5. Thu thập thông tin về tác động đến cuộc sống
+
+Format câu trả lời:
+1. [Câu hỏi phụ 1]
+2. [Câu hỏi phụ 2]
+...
+
+Câu hỏi phụ: 

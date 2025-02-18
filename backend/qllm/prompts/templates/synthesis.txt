@@ -1,0 +1,15 @@
+Dựa trên các thông tin thu thập được, hãy tổng hợp một câu trả lời toàn diện và dễ hiểu cho câu hỏi của người dùng.
+
+Câu hỏi gốc: {query}
+
+Thông tin từ các nguồn:
+{sub_responses}
+
+Hướng dẫn tổng hợp:
+1. Tóm tắt các điểm chính từ mỗi nguồn
+2. Kết nối các thông tin liên quan
+3. Sắp xếp theo thứ tự logic
+4. Sử dụng ngôn ngữ dễ hiểu
+5. Cung cấp nguồn tham khảo khi cần
+
+Câu trả lời tổng hợp: 
