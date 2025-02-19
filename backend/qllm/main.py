@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI):
     current_path = Path(__file__).parent
     cfg = Config(os.path.join(current_path, "alembic.ini"))
     # Change DB URL to use psycopg2 driver for this specific check
-    db_url = str(settings.SQLALCHEMY_DATABASE_URI).replace(
+    db_url = str(settings.DATABASE_URI).replace(
         "postgresql+asyncpg://", "postgresql+psycopg2://"
     )
     script_location = cfg.get_main_option("script_location", "alembic")
@@ -96,13 +96,7 @@ if settings.BACKEND_CORS_ORIGINS:
     logger.info("CORS enabled for %s", settings.BACKEND_CORS_ORIGINS)
     # origins = settings.BACKEND_CORS_ORIGINS.copy()
     origins = str(settings.BACKEND_CORS_ORIGINS)
-    if (
-        settings.CODESPACES
-        and settings.CODESPACE_NAME
-        and settings.ENVIRONMENT == AppEnvironment.LOCAL
-    ):
-        # add codespace origin if running in Github codespace
-        origins.append(f"https://{settings.CODESPACE_NAME}-3000.app.github.dev")
+    origins.append(settings.FRONTEND_HOST)
     # allow all origins
     app.add_middleware(
         CORSMiddleware,
@@ -119,8 +113,8 @@ else:
         "http://127.0.0.1",
         "http://127.0.0.1:8000",
         "http://0.0.0.0",
-        "http://localhost:5173",
     ]
+    origins.append(settings.FRONTEND_HOST)
 
     app.add_middleware(
         CORSMiddleware,
@@ -131,11 +125,6 @@ else:
     )
 
 app.include_router(api_router, prefix=settings.API_PREFIX)
-
-# Mount the data files to serve the file viewer
-# mount_static_files("data", "/api/files/data")
-# Mount the output files from tools
-# mount_static_files("output", "/api/files/output")
 
 
 def start():

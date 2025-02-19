@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from qllm.core.config import settings
 
 # Database connection settings
-DATABASE_URL = settings.SQLALCHEMY_DATABASE_URI
+DATABASE_URL = settings.DATABASE_URI
 
 
 # Create the SQLAlchemy engine

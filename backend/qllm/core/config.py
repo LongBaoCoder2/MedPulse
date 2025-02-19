@@ -44,9 +44,10 @@ class ApplicationSetting(BaseSettings):
             BeforeValidator(parse_cors),
         ]
     ] = None
+    DATABASE_URL: str
     STORAGE_DIR: str = "storage"
 
-    FRONTEND_HOST: str = "http://localhost:3000"
+    FRONTEND_HOST: str
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
     LOG_LEVEL: Literal["DEBUG", "INFO", "ERROR", "WARNING"] = "DEBUG"
     SENTRY_DSN: Optional[HttpUrl] = None
@@ -88,20 +89,6 @@ class ApplicationSetting(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-
-    @property
-    def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
-        """
-        Builds the SQLAlchemy-compatible database URI.
-        """
-        return MultiHostUrl.build(
-            scheme="postgresql+asyncpg",
-            username=self.POSTGRES_USER,
-            password=self.POSTGRES_PASSWORD,
-            host=self.POSTGRES_SERVER,
-            port=self.POSTGRES_PORT,
-            path=self.POSTGRES_DB,
-        )
 
 
 # Initialize settings
