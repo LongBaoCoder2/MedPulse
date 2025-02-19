@@ -1,4 +1,3 @@
-previewsEnabled: true
 databases:
   - name: healthcare-db
     databaseName: llama_app_db
