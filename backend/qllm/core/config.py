@@ -76,8 +76,6 @@ class ApplicationSetting(BaseSettings):
 
     # Deployment
     RENDER: bool = False
-    CODESPACES: bool = False
-    CODESPACE_NAME: Optional[str]
 
     class Config:
         env_file = ".env"

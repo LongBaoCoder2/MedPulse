@@ -4,5 +4,6 @@ from qllm.core.config import settings
 
 DATABASE_URL = settings.DATABASE_URL
 
-engine = create_async_engine(str(DATABASE_URL))
+print("DATABASE_URL: ", DATABASE_URL)
+engine = create_async_engine(DATABASE_URL, echo=True)
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)

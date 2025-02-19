@@ -2,8 +2,8 @@ import logging
 import sys
 from contextlib import asynccontextmanager
 
-import alembic
 import uvicorn
+import alembic
 from alembic import script
 from alembic.config import Config
 from alembic.runtime import migration
@@ -51,22 +51,25 @@ async def lifespan(app: FastAPI):
     # first wait for DB to be connectable
     await check_database_connection()
 
-    current_path = Path(__file__).parent
-    cfg = Config(os.path.join(current_path, "alembic.ini"))
+    cfg = Config("alembic.ini")
     # Change DB URL to use psycopg2 driver for this specific check
     db_url = str(settings.DATABASE_URL).replace(
         "postgresql+asyncpg://", "postgresql+psycopg2://"
     )
     script_location = cfg.get_main_option("script_location", "alembic")
-    script_location = str(os.path.join(current_path, script_location))
+    # script_location = str(os.path.join(current_path, script_location))
     cfg.set_main_option("script_location", script_location)
 
     cfg.set_main_option("sqlalchemy.url", db_url)
     engine = create_engine(db_url, echo=True)
     if not check_current_head(cfg, engine):
-        raise Exception(
+        logger.info(
             "Database is not up to date. Please run `poetry run alembic upgrade head`"
         )
+        logger.info("Running migrations")
+        alembic_args = ["--raiseerr", "upgrade", "head"]
+        alembic.config.main(argv=alembic_args)
+        logger.info("Migrations complete")
     # initialize pg vector store singleton
     vector_store = get_vector_store()
     await run_init_vector_store()
@@ -94,14 +97,13 @@ app = FastAPI(
 
 if settings.BACKEND_CORS_ORIGINS:
     logger.info("CORS enabled for %s", settings.BACKEND_CORS_ORIGINS)
-    # origins = settings.BACKEND_CORS_ORIGINS.copy()
-    origins = str(settings.BACKEND_CORS_ORIGINS)
+    origins = settings.BACKEND_CORS_ORIGINS.copy()
     origins.append(settings.FRONTEND_HOST)
     # allow all origins
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,
-        allow_origin_regex="https://llama-app-frontend.*\.vercel\.app",
+        allow_origin_regex="https://qllm-healthcare.*\.vercel\.app",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
