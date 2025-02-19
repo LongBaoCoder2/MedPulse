@@ -2,6 +2,7 @@ databases:
   - name: healthcare-db
     databaseName: llama_app_db
     plan: free
+    region: singapore
 
 services:
   # A Docker web service
