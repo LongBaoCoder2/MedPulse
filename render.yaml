@@ -1,6 +1,6 @@
 databases:
   - name: healthcare-db
-    databaseName: llama_app_db
+    databaseName: healthcare_db
     plan: free
     region: singapore
 
