@@ -1,0 +1,78 @@
+previewsEnabled: true
+databases:
+  - name: healthcare-db
+    databaseName: llama_app_db
+    plan: free
+    previewPlan: free
+
+services:
+  # A Docker web service
+  # Docs for Render blueprints:
+  # https://render.com/docs/blueprint-spec
+  - type: web
+    name: healthcare-backend
+    runtime: docker
+    repo: https://github.com/LongBaoCoder2/qllm.git
+    region: singapore
+    plan: free
+    rootDir: ./backend
+    scaling: # Autoscaling configuration
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 60
+      targetCPUPercent: 60 
+    healthCheckPath: /api/health/
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: healthcare-db
+          property: connectionString
+      - fromGroup: general-settings
+      - fromGroup: prod-web-secrets
+      - fromGroup: preview-web-secrets
+
+envVarGroups:
+- name: general-settings
+  envVars:
+    - key: PROJECT_NAME
+      value: qllm
+      previewValue: qllm-preview
+    - key: LOG_LEVEL
+      value: INFO
+    - key: FRONTEND_HOST
+      value: https://qllm-healthcare.vercel.app/
+    - key: API_PREFIX
+      value: '/api/v1'
+      previewValue: true
+    - key: LOG_LEVEL
+      value: INFO
+      previewValue: DEBUG
+    - key: BACKEND_CORS_ORIGINS
+      value: '["http://localhost", "http://localhost:8000", "http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000", "https://llama-app-backend.onrender.com", "https://qllm-healthcare.vercel.app/"]'
+    - key: QDRANT_URL
+      value: https://6a4f58ad-84bd-4868-b9ec-48fdb5c59ef3.europe-west3-0.gcp.cloud.qdrant.io:6333
+      previewValue: https://dl94gqvzlh4k8.cloudfront.net
+    - key: SENTRY_DSN
+      sync: false
+    - key: LLM_TEMPERATURE
+      value: 0.5
+    - key: LLM_MAX_TOKENS
+      value: 256
+    - key: EMBEDDING_DIM
+      value: 1536
+- name: prod-web-secrets
+  envVars:
+    # Manually add a prod value for OPENAI_API_KEY in Render dashboard
+    - key: OPENAI_API_KEY
+      sync: false
+    - key: QDRANT_API_KEY
+      sync: false
+- name: preview-web-secrets
+  envVars:
+    # All env vars in this group should be prefixed with "PREVIEW_"
+    # Manually add a preview value for PREVIEW_OPENAI_API_KEY in Render dashboard
+    - key: PREVIEW_OPENAI_API_KEY
+      sync: false
+    - key: PREVIEW_QDRANT_API_KEY
+      sync: false
+
