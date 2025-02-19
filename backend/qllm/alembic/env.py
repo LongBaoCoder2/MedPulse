@@ -24,8 +24,8 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 db_url = config.get_main_option("sqlalchemy.url")
-# if settings.DATABASE_URI is not None:
-#     db_url = str(settings.DATABASE_URI)
+# if settings.DATABASE_URL is not None:
+#     db_url = str(settings.DATABASE_URL)
 #     print(f"Using DATABASE_URL {db_url} from environment for migrations")
 # config.set_main_option("sqlalchemy.url", db_url)
 

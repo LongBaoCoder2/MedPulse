@@ -38,13 +38,10 @@ class ApplicationSetting(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 11520
     UVICORN_WORKER_COUNT: Optional[int] = None
-    BACKEND_CORS_ORIGINS: Optional[
-        Annotated[
-            List[AnyUrl] | str,
-            BeforeValidator(parse_cors),
-        ]
-    ] = None
-    DATABASE_URL: str
+    BACKEND_CORS_ORIGINS: Annotated[
+        List[AnyUrl] | str,
+        BeforeValidator(parse_cors),
+    ]
     STORAGE_DIR: str = "storage"
 
     FRONTEND_HOST: str
@@ -56,11 +53,7 @@ class ApplicationSetting(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # Database config
-    POSTGRES_SERVER: str = ""
-    POSTGRES_PORT: int = 5432
-    POSTGRES_USER: str = ""
-    POSTGRES_PASSWORD: str = ""
-    POSTGRES_DB: str = ""
+    DATABASE_URL: str
 
     # LLM Config
     LLM_TEMPERATURE: float = 0.5

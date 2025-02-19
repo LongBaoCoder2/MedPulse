@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI):
     current_path = Path(__file__).parent
     cfg = Config(os.path.join(current_path, "alembic.ini"))
     # Change DB URL to use psycopg2 driver for this specific check
-    db_url = str(settings.DATABASE_URI).replace(
+    db_url = str(settings.DATABASE_URL).replace(
         "postgresql+asyncpg://", "postgresql+psycopg2://"
     )
     script_location = cfg.get_main_option("script_location", "alembic")
