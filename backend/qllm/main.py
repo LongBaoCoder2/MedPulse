@@ -45,9 +45,6 @@ def __setup_logging(log_level: str):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    import os
-    from pathlib import Path
-
     # first wait for DB to be connectable
     await check_database_connection()
 
@@ -145,7 +142,7 @@ def start():
     uvicorn.run(
         "qllm.main:app",
         host="0.0.0.0",
-        port=8000,
+        port=settings.PORT,
         reload=live_reload,
         workers=settings.UVICORN_WORKER_COUNT,
     )

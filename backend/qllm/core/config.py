@@ -2,8 +2,7 @@ import secrets
 from enum import Enum
 from typing import Annotated, Any, List, Literal, Optional
 
-from pydantic import AnyUrl, BeforeValidator, HttpUrl, PostgresDsn
-from pydantic_core import MultiHostUrl
+from pydantic import AnyUrl, BeforeValidator, HttpUrl
 from pydantic_settings import BaseSettings
 
 
@@ -16,6 +15,15 @@ def parse_cors(v: Any) -> List[str] | str:
     elif isinstance(v, (list, str)):
         return v
     raise ValueError(v)
+
+
+def replace_postgresql_asyncpg(url: str) -> str:
+    """
+    Replaces `postgresql://` with `postgresql+asyncpg://` in the URL.
+    """
+    if "postgresql://" in url:
+        return url.replace("postgresql://", "postgresql+asyncpg://")
+    return url
 
 
 class AppEnvironment(str, Enum):
@@ -36,6 +44,7 @@ class ApplicationSetting(BaseSettings):
     PROJECT_NAME: str = "QLLM"
     API_PREFIX: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
+    PORT: int = 10000
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 11520
     UVICORN_WORKER_COUNT: Optional[int] = None
     BACKEND_CORS_ORIGINS: Annotated[
@@ -53,7 +62,7 @@ class ApplicationSetting(BaseSettings):
     ALGORITHM: str = "HS256"
 
     # Database config
-    DATABASE_URL: str
+    DATABASE_URL: Annotated[str, BeforeValidator(replace_postgresql_asyncpg)]
 
     # LLM Config
     LLM_TEMPERATURE: float = 0.5
