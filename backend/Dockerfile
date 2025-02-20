@@ -12,6 +12,7 @@ COPY . ./
 RUN apt-get update
 RUN apt-get install libpq-dev gcc build-essential wkhtmltopdf  -y
 RUN poetry install
+EXPOSE $PORT
 
 ARG OPENAI_API_KEY
 ENV OPENAI_API_KEY=$OPENAI_API_KEY
